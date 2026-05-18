@@ -27,7 +27,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener {
         yellowColor = true;
         marioX = 50;
         marioY = 435;
-        luigiX = 60;
+        luigiX = 100;
         luigiY = 435;
         try {
             background = ImageIO.read(new File("src/background.png"));
@@ -40,7 +40,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener {
             System.out.println(e.getMessage());
         }
         try {
-            mario = ImageIO.read(new File("src/luigiright.png"));
+            luigi = ImageIO.read(new File("src/luigiright.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -79,6 +79,8 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener {
     public void mouseReleased(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON3) {
             yellowColor = !yellowColor;
+            marioX = (int) e.getPoint().getX();
+            marioY = (int) e.getPoint().getY();
             repaint();
         }
     }
@@ -116,20 +118,20 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener {
         if (keyCode == KeyEvent.VK_LEFT) {
             luigiX -= 5;
             try {
-                mario = ImageIO.read(new File("src/marioleft.png"));
+                luigi = ImageIO.read(new File("src/luigileft.png"));
             } catch (IOException error) { }
         }
-        if (keyCode == KeyEvent.VK_D) {
+        if (keyCode == KeyEvent.VK_RIGHT) {
             luigiX += 5;
             try {
-                mario = ImageIO.read(new File("src/marioright.png"));
+                luigi = ImageIO.read(new File("src/luigiright.png"));
             } catch (IOException error) { }
         }
-        if (keyCode == KeyEvent.VK_W) {
-            marioY -= 5;
+        if (keyCode == KeyEvent.VK_UP) {
+            luigiY -= 5;
         }
-        if (keyCode == KeyEvent.VK_S) {
-            marioY += 5;
+        if (keyCode == KeyEvent.VK_DOWN) {
+            luigiY += 5;
         }
         repaint();
     }
