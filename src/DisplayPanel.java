@@ -24,6 +24,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
     private Timer timer;
     private boolean gameOver;
     private ArrayList<Point> coins;
+    private int cointime;
 
     public DisplayPanel() {
         score = 0;
@@ -37,6 +38,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         goombaX = -50;
         timer = new Timer(10,this);
         pressedKeys = new boolean[128];
+        cointime = 0;
         try {
             background = ImageIO.read(new File("src/background.png"));
         } catch (IOException e) {
@@ -75,7 +77,7 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         g.drawImage(background, 0, 0, null);
         if (gameOver) {
             g.setFont(new Font("Arial", Font.BOLD, 32));
-            if (score == 10) {
+            if (score == 20) {
                 g.drawString("GAME OVER, YOU WIN!", 350, 240);
             } else {
                 g.drawString("GAME OVER, YOU LOSE :(", 350, 240);
@@ -117,8 +119,9 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
             repaint();
         }
         if (e.getButton() == MouseEvent.BUTTON1) {
-            Point clickLocation = e.getPoint();
-            coins.add(clickLocation);
+            yellowColor = !yellowColor;
+            luigiX = (int) e.getPoint().getX();
+            luigiY = (int) e.getPoint().getY();
             repaint();
         }
     }
@@ -194,6 +197,14 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
         }
     }
 
+    private void createCoin() {
+        int x = (int) (Math.random() * 960);
+        int y = (int) (Math.random() * 470 + 10);
+        Point point = new Point(x,y);
+        coins.add(point);
+        repaint();
+    }
+
     private Rectangle marioRect() {
         int imgH = mario.getHeight();
         int imgW = mario.getWidth();
@@ -244,11 +255,16 @@ public class DisplayPanel extends JPanel implements MouseListener, KeyListener, 
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        cointime++;
         moveMario();
         moveLuigi();
         moveGoomba();
+        if (cointime == 50) {
+            createCoin();
+            cointime = 0;
+        }
         checkForMarioCoinCollision();
-        if (checkForMarioGoombaCollision() || score == 10) {
+        if (checkForMarioGoombaCollision() || score == 20) {
             gameOver = true;
             timer.stop();
         }
